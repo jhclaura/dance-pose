@@ -1,0 +1,18 @@
+{
+  "name": "dance-pose",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jhclaura",
+  "license": "ISC",
+  "dependencies": {
+    "eventemitter3": "^3.1.0",
+    "events": "^3.0.0",
+    "howler": "^2.1.1",
+    "paper": "^0.12.0",
+    "three": "^0.102.1"
+  }
+}
