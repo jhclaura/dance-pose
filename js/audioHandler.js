@@ -2,34 +2,42 @@
 
 export default class AudioHandler
 {
-	constructor(context)
+	constructor()
 	{
-		this.audioContext = context;
+		// this.audioContext = context;
 		this.levelCount = 32; //should be factor of 512(bin count)
 
 		this.beatCutOff = 0;
 		this.BEAT_HOLD_TIME = 40; //num of frames to hold a beat
 		this.BEAT_DECAY_RATE = 0.98;
-		this.BEAT_MIN = 0.15; //a volume less than this is no beat
+		this.BEAT_MIN = 0.15; //a volume less than this is no beat (0.15)
 		this.beatTime = 0;
 		this.msecsAvg = 633; //time between beats (msec)
 	}
 
 	init()
 	{
-		// try {
-		// 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		// 	this.audioContext = new window.AudioContext();
-		// } catch(e) {
-		// 	return;
-		// }
+		try {
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			this.audioContext = new window.AudioContext();
+		} catch(e) {
+			return;
+		}
 		this.waveData = [];
 		this.levelsData = [];
 		this.isPlayingAudio = false;
-		
+
+		this.filter = this.audioContext.createBiquadFilter();
+		this.filter.type = "lowpass";
+		this.filter.frequency.value = 140;
+		this.filter.Q.value = 8;
+		//console.log(this.filter.frequency.value);
+
 		this.analyser = this.audioContext.createAnalyser();
 		this.analyser.smoothingTimeConstant = 0.8; //0<->1. 0 is no time smoothing
 		this.analyser.fftSize = 1024;
+
+		this.filter.connect(this.analyser);
 		this.analyser.connect(this.audioContext.destination);
 		this.binCount = this.analyser.frequencyBinCount;	// 512
 
@@ -49,7 +57,8 @@ export default class AudioHandler
 	initSound()
 	{
 		this.source = this.audioContext.createBufferSource();
-		this.source.connect(this.analyser);
+		//this.source.connect(this.analyser);
+		this.source.connect(this.filter);
 	}
 
 	stopSound()
@@ -69,7 +78,7 @@ export default class AudioHandler
 		this.isPlayingAudio = true;
 	}
 
-	loadSound(autoPlay = true, url = "../assets/audios/canned_heat_audio.mp3")
+	loadSound(autoPlay = true, url = "../assets/audios/dancing_on_my_own.mp3")
 	{
 		this.stopSound();
 		this.url = url;
@@ -159,7 +168,7 @@ export default class AudioHandler
 		}
 
 		this.level = sum / this.levelCount;
-		// console.log(this.level);
+		console.log(this.level);
 
 		// beat detection
 		if(this.level > this.beatCutOff && this.level > this.BEAT_MIN) {
