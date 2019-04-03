@@ -68,7 +68,7 @@ export default class Game {
 		this.pulseHandler = new PulseHandler();
 		this.pulseHandler.load();
 		this.audioSample = new Howl({
-			src: ["/assets/audios/canned_heat_audio.mp3"]
+			src: ["./assets/audios/canned_heat_audio.mp3"]
 		});
 
 		// ========= EVENTS

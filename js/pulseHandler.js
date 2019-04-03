@@ -15,7 +15,7 @@ export default class PulseHandler {
 		});
 	}
 
-	load(uri = "/assets/audios/canned_heat_audio.mp3") {
+	load(uri = "./assets/audios/canned_heat_audio.mp3") {
 		this.pulse.loadBufferFromURI(uri);
 	}
 }
