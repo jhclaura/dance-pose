@@ -114,6 +114,15 @@ export default class Player {
 		};
 		this.egg.visible = false;
 
+		_url = './assets/images/instruction_' + this.name + '.png';
+		this.instruction = new Raster({
+			source: _url,
+			position: [view.size.width/4.5, view.size.height/4*3]
+		});
+		this.instruction.onLoad = ()=>{
+			this.instruction.scale(1);
+		};
+
 		this.keydownTime = Date.now();
 	}
 
@@ -123,7 +132,7 @@ export default class Player {
 		this.starOriPos = this.star.position;
 		this.egg.position.x += xDiff;
 		this.scoreBG.position.x += xDiff*2;
-		// this.scoreText.position.x += xDiff;
+		this.instruction.position.x += xDiff;
 
 		this.BG.position = new Point(x, y);
 		console.log('updateBGPosition');
@@ -198,6 +207,8 @@ export default class Player {
 		this.currentPose.visible = false;
 		this.currentPose = this.poses[this.poseTable[keyCode]];
 		this.currentPose.visible = true;
+
+		if(this.instruction.visible) this.instruction.visible = false;
 
 		return true;
 	}
